@@ -120,6 +120,12 @@ def mutacion(hijo):
         hijo[i] = 0
   return hijo
 
+def calculoFitnessTotalTemporal(tablaGenotiposTemporal):
+  fitnessTotalTemporal = 0
+  for i in range(1,len(tablaGenotiposTemporal)+1):
+    fitnessTotalTemporal += tablaGenotiposTemporal[i]["fitness"]
+  return fitnessTotalTemporal
+
 TablaGenes, fitnessTotal = llenadoTablaCompletaGenotipos(cantIndividuos)
 print("Tabla de genotipos: ")
 mostrarTabla(TablaGenes)
