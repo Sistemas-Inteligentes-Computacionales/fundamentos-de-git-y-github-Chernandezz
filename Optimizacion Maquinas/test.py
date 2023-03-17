@@ -77,6 +77,14 @@ def llenadoTablaCompletaGenotipos(cantIndividuos):
   tablaCompletaGenotipos = calculoPromedios(tablaCompletaGenotipos, fitnessTotal)
   return tablaCompletaGenotipos, fitnessTotal
 
+def creacionEstructuraGentipo(datosBinarios):
+  genotipo = {}
+  genotipo["datosBinarios"] = datosBinarios
+  genotipo["peso"] = calculoPesos(genotipo)
+  genotipo["datosDecimales"] = llenadoGenotipoDecimales(genotipo)
+  genotipo["fitness"] = calculoFitness(genotipo)
+  return genotipo
+
 def mostrarTabla(tablaGenotipos):
   for i in tablaGenotipos:
     print("=========== Genotipo ", i, " ===========")
