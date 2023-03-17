@@ -87,10 +87,36 @@ def mostrarTabla(tablaGenotipos):
     print("Promedio:", tablaGenotipos[i]["promedio"])
     print("Promedio Acumulado:", tablaGenotipos[i]["promedioAcumulado"])
 
-elementos, fitnessTotal = llenadoTablaCompletaGenotipos(cantIndividuos)
+def seleccionPadre(tablaGenotipos):
+  aleatorio = random.random()
+  for i in tablaGenotipos:
+    if aleatorio <= tablaGenotipos[i]["promedioAcumulado"]:
+      return tablaGenotipos[i]
+    
+def cruce(papa1, papa2):
+  # Seleccionar el punto de cruce
+  puntoCruce = random.randint(0, len(papa1["datosBinarios"])-1)
+  # Hijo 1
+  hijo1 = papa1["datosBinarios"][:puntoCruce] + papa2["datosBinarios"][puntoCruce:]
+  # Hijo 2
+  hijo2 = papa2["datosBinarios"][:puntoCruce] + papa1["datosBinarios"][puntoCruce:]
+  return hijo1, hijo2
+
+def mutacion(hijo):
+  for i in range(len(hijo)):
+    aleatorio = random.random()
+    if aleatorio <= Pmuta:
+      if hijo[i] == 0:
+        hijo[i] = 1
+      else:
+        hijo[i] = 0
+  return hijo
+
+TablaGenes, fitnessTotal = llenadoTablaCompletaGenotipos(cantIndividuos)
 print("Tabla de genotipos: ")
-mostrarTabla(elementos)
+mostrarTabla(TablaGenes)
 print("Fitness Total: ", fitnessTotal)
+
 
 try:
   numIter = int(input('ingrese el número de iteraciones que desea: '))
@@ -101,3 +127,15 @@ for iter in range(numIter):
   print("Iteración: ", iter+1)
   # Seleccionar los mejores 2
   aleatorioCruce = random.random()
+  if aleatorioCruce <= Pcruce:
+    papa1 = seleccionPadre(TablaGenes)
+    papa2 = seleccionPadre(TablaGenes)
+    # Cruce
+    hijo1, hijo2 = cruce(papa1, papa2)
+    # Mutación
+    aleatorioMuta = random.random()
+    if aleatorioMuta <= Pmuta:
+      hijo1 = mutacion(hijo1)
+      hijo2 = mutacion(hijo2)
+      
+
