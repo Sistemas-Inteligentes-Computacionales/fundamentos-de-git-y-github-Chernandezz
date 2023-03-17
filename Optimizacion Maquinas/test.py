@@ -14,6 +14,9 @@ pesoMax = 50 # peso maximo que puede cargar la mochila
 try:
   cantVariables = int(input('Variables: '))
   cantIndividuos = int(input('Individuos: '))
+  while cantIndividuos % 2 != 0:
+    print('El numero de individuos debe ser par')
+    cantIndividuos = int(input('Individuos: '))
   cantidadBits = int(input('Bits por gen: '))
 except:
   print('por favor ingrese un valor entero ejm 2 , 10')
@@ -43,8 +46,8 @@ def calculoFitness(genotipo):
   UtilidadTotal = 0
   for i in range(0,len(genotipo["datosBinarios"]),2):
     valorDecimal = int(str(genotipo["datosBinarios"][i])+str(genotipo["datosBinarios"][i+1]),2)
-    utilidad = pesos[i//2]
-    UtilidadTotal += valorDecimal * utilidad
+    utilidadTemp = utilidad[i//2]
+    UtilidadTotal += valorDecimal * utilidadTemp
   return UtilidadTotal
 
 def calculoPromedios(tablaGenotipos, fitnessTotal):
@@ -138,18 +141,41 @@ except:
   print('por favor ingrese un valor entero ejm 2 , 10')
 
 for iter in range(numIter):
+  contPos = 1
   print("Iteración: ", iter+1)
+  tablaGenotiposTemporal = {}
+  for i in range(len(TablaGenes)//2):
   # Seleccionar los mejores 2
-  aleatorioCruce = random.random()
-  if aleatorioCruce <= Pcruce:
+    aleatorioCruce = random.random()
     papa1 = seleccionPadre(TablaGenes)
     papa2 = seleccionPadre(TablaGenes)
-    # Cruce
-    hijo1, hijo2 = cruce(papa1, papa2)
-    # Mutación
-    aleatorioMuta = random.random()
-    if aleatorioMuta <= Pmuta:
-      hijo1 = mutacion(hijo1)
-      hijo2 = mutacion(hijo2)
-      
+    if aleatorioCruce <= Pcruce:
+      # Cruce
+      hijo1, hijo2 = cruce(papa1, papa2)
+      # Mutación
+      aleatorioMuta = random.random()
+      if aleatorioMuta <= Pmuta:
+        hijo1 = mutacion(hijo1)
+        hijo2 = mutacion(hijo2)
+      tablaGenotiposTemporal[contPos] = creacionEstructuraGentipo(hijo1)
+      contPos += 1
+      tablaGenotiposTemporal[contPos] = creacionEstructuraGentipo(hijo2)
+      contPos += 1
+    else:
+      tablaGenotiposTemporal[contPos] = papa1
+      contPos += 1
+      tablaGenotiposTemporal[contPos] = papa2
+      contPos += 1
+  # # Calculo de los promedios
+  fitnessTotalTemporal = calculoFitnessTotalTemporal(tablaGenotiposTemporal)
+  tablaGenotiposTemporal = calculoPromedios(tablaGenotiposTemporal, fitnessTotalTemporal)
+  # # Mostramos Primera Tabla
+  print("Tabla de genotipos: ")
+  mostrarTabla(TablaGenes)
+  print("Fitness Total: ", fitnessTotal)
+  # # Mostramos Segunda Tabla
+  print("Tabla de genotipos Temporal: ")
+  mostrarTabla(tablaGenotiposTemporal)
+  print("Fitness Total Temporal: ", fitnessTotalTemporal)
+  
 
