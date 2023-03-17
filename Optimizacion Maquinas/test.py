@@ -47,8 +47,18 @@ def calculoFitness(genotipo):
     UtilidadTotal += valorDecimal * utilidad
   return UtilidadTotal
 
+def calculoPromedios(tablaGenotipos, fitnessTotal):
+  promedioAcumulado = 0
+  for i in range(1,len(tablaGenotipos)+1):
+    promedio = tablaGenotipos[i]["fitness"] / fitnessTotal
+    tablaGenotipos[i]["promedio"] = promedio
+    promedioAcumulado += promedio
+    tablaGenotipos[i]["promedioAcumulado"] = promedioAcumulado
+  return tablaGenotipos
+
 def llenadoTablaCompletaGenotipos(cantIndividuos):
   tablaCompletaGenotipos = {}
+  fitnessTotal = 0
   for i in range(cantIndividuos):
     genotipo = {}
     # Validacion para que el peso no sea mayor a 50
@@ -61,8 +71,11 @@ def llenadoTablaCompletaGenotipos(cantIndividuos):
     genotipo["datosDecimales"] = llenadoGenotipoDecimales(genotipo)
     # Calculo del fitness
     genotipo["fitness"] = calculoFitness(genotipo)
+    fitnessTotal += genotipo["fitness"]
     tablaCompletaGenotipos[i+1] = genotipo
-  return tablaCompletaGenotipos
+  # Los promedios toca hacerlos al final porque se necesita el fitness total
+  tablaCompletaGenotipos = calculoPromedios(tablaCompletaGenotipos, fitnessTotal)
+  return tablaCompletaGenotipos, fitnessTotal
 
 def mostrarTabla(tablaGenotipos):
   for i in tablaGenotipos:
@@ -71,10 +84,13 @@ def mostrarTabla(tablaGenotipos):
     print("Peso:", tablaGenotipos[i]["peso"])
     print("Datos Decimales:", tablaGenotipos[i]["datosDecimales"])
     print("Fitness:", tablaGenotipos[i]["fitness"])
+    print("Promedio:", tablaGenotipos[i]["promedio"])
+    print("Promedio Acumulado:", tablaGenotipos[i]["promedioAcumulado"])
 
-elementos = llenadoTablaCompletaGenotipos(cantIndividuos)
+elementos, fitnessTotal = llenadoTablaCompletaGenotipos(cantIndividuos)
 print("Tabla de genotipos: ")
 mostrarTabla(elementos)
+print("Fitness Total: ", fitnessTotal)
 
 try:
   numIter = int(input('ingrese el número de iteraciones que desea: '))
