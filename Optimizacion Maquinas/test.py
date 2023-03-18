@@ -141,6 +141,34 @@ def calculoFitnessTotalTemporal(tablaGenotiposTemporal):
     fitnessTotalTemporal += tablaGenotiposTemporal[i]["fitness"]
   return fitnessTotalTemporal
 
+def mejorIndividuo(tablaGenotipos):
+  mejorIndividuo = 0
+  for i in range(1,len(tablaGenotipos)+1):
+    if tablaGenotipos[i]["fitness"] > mejorIndividuo:
+      mejorIndividuo = tablaGenotipos[i]["fitness"]
+  return mejorIndividuo
+
+def promedioFitness(tablaGenotipos):
+  promedio = 0
+  for i in range(1,len(tablaGenotipos)+1):
+    promedio += tablaGenotipos[i]["fitness"]
+  promedio = promedio / len(tablaGenotipos)
+  return promedio
+
+def mostrarResumenIteraciones(datosIteracion):
+  tabla = PrettyTable()
+  tabla.field_names = ["Iteración", "Mejor Fitness", "Promedio Fitness", "Fitness Total"]
+  for i in range(len(datosIteracion)):
+    tabla.add_row([datosIteracion[i][0], datosIteracion[i][1], datosIteracion[i][2], datosIteracion[i][3]])
+  print(tabla)
+
+def verificacionConvergencia(tablaGenotipos):
+  primerFitness = tablaGenotipos[1]["fitness"]
+  for i in range(1,len(tablaGenotipos)+1):
+    if primerFitness != tablaGenotipos[i]["fitness"]:
+      return False
+  return True
+
 TablaGenes, fitnessTotal = llenadoTablaCompletaGenotipos(cantIndividuos)
 print("Tabla de genotipos: ")
 mostrarTablaGenotipos(TablaGenes)
@@ -152,9 +180,12 @@ try:
 except:
   print('por favor ingrese un valor entero ejm 2 , 10')
 
+datosIteracion = []
 for iter in range(numIter):
+  
   contPos = 1
   tablaGenotiposTemporal = {}
+  dato = []
   for i in range(len(TablaGenes)//2):
   # Seleccionar los mejores 2
     aleatorioCruce = random.random()
@@ -182,9 +213,16 @@ for iter in range(numIter):
   tablaGenotiposTemporal = calculoPromedios(tablaGenotiposTemporal, fitnessTotalTemporal)
   TablaGenes = tablaGenotiposTemporal
   fitnessTotal = fitnessTotalTemporal
-  print("Iteración: ", iter+1)
-  print("Tabla de genotipos iteracion ",iter+1)
-  print("Fitness Total: ", fitnessTotal)
-  mostrarTablaGenotipos(TablaGenes)
-  
+  dato.append(iter+1)
+  dato.append(mejorIndividuo(TablaGenes))
+  dato.append(promedioFitness(TablaGenes))
+  dato.append(fitnessTotal)
+  datosIteracion.append(dato)
+  # Si se desea evitar que el programa se detenga al encontrar convergencia comentar el bloque del if -> linea 222 hasta la linea 225
+  if verificacionConvergencia(TablaGenes):
+    print("--------------- CONVERGENCIA ---------------")
+    print("Se ha alcanzado la convergencia en la iteración: ", iter+1)
+    break
+print("Resumen de iteraciones: ")
+mostrarResumenIteraciones(datosIteracion)
 
