@@ -32,14 +32,18 @@ def calculoPesos(genotipo):
   pesoTotal = 0
   for i in range(0,len(genotipo["datosBinarios"]),2):
     valorDecimal = int(str(genotipo["datosBinarios"][i])+str(genotipo["datosBinarios"][i+1]),2)
-    peso = pesos[i//2]
+    peso = pesos[i//cantidadBits]
     pesoTotal += valorDecimal * peso
   return pesoTotal
 
 def llenadoGenotipoDecimales(genotipo):
   decimal = []
-  for i in range(0,len(genotipo["datosBinarios"]),2):
-    valorDecimal = int(str(genotipo["datosBinarios"][i])+str(genotipo["datosBinarios"][i+1]),2)
+  temp= ""
+  for i in range(0,len(genotipo["datosBinarios"]),cantidadBits):
+    for j in range(i,i+cantidadBits):
+      temp += str(genotipo["datosBinarios"][j])
+    valorDecimal = int(temp,2)
+    temp = ""
     decimal.append(valorDecimal)
   return decimal
 
@@ -47,7 +51,7 @@ def calculoFitness(genotipo):
   UtilidadTotal = 0
   for i in range(0,len(genotipo["datosBinarios"]),2):
     valorDecimal = int(str(genotipo["datosBinarios"][i])+str(genotipo["datosBinarios"][i+1]),2)
-    utilidadTemp = utilidad[i//2]
+    utilidadTemp = utilidad[i//cantidadBits]
     UtilidadTotal += valorDecimal * utilidadTemp
   return UtilidadTotal
 
