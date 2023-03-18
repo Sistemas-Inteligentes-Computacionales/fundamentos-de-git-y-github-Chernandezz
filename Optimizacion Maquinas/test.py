@@ -1,6 +1,7 @@
 
 import numpy as np
 import random
+from prettytable import PrettyTable
 
 pesos = [7, 6, 8, 2] #pesos de los elementos
 utilidad = [4, 5, 6, 3] #utilidad de los elementos
@@ -88,7 +89,7 @@ def creacionEstructuraGentipo(datosBinarios):
   genotipo["fitness"] = calculoFitness(genotipo)
   return genotipo
 
-def mostrarTabla(tablaGenotipos):
+def mostrarDatosGen(tablaGenotipos):
   for i in tablaGenotipos:
     print("=========== Genotipo ", i, " ===========")
     print("Datos Binarios:", tablaGenotipos[i]["datosBinarios"])
@@ -97,6 +98,13 @@ def mostrarTabla(tablaGenotipos):
     print("Fitness:", tablaGenotipos[i]["fitness"])
     print("Promedio:", tablaGenotipos[i]["promedio"])
     print("Promedio Acumulado:", tablaGenotipos[i]["promedioAcumulado"])
+
+def mostrarTablaGenotipos(tablaGenotipos):
+  tabla = PrettyTable()
+  tabla.field_names = ["Genotipo", "Datos Binarios", "Peso", "Datos Decimales", "Fitness", "Promedio", "Promedio Acumulado"]
+  for i in tablaGenotipos:
+    tabla.add_row([i, tablaGenotipos[i]["datosBinarios"], tablaGenotipos[i]["peso"], tablaGenotipos[i]["datosDecimales"], tablaGenotipos[i]["fitness"], tablaGenotipos[i]["promedio"], tablaGenotipos[i]["promedioAcumulado"]])
+  print(tabla)
 
 def seleccionPadre(tablaGenotipos):
   aleatorio = random.random()
@@ -131,7 +139,7 @@ def calculoFitnessTotalTemporal(tablaGenotiposTemporal):
 
 TablaGenes, fitnessTotal = llenadoTablaCompletaGenotipos(cantIndividuos)
 print("Tabla de genotipos: ")
-mostrarTabla(TablaGenes)
+mostrarTablaGenotipos(TablaGenes)
 print("Fitness Total: ", fitnessTotal)
 
 
@@ -142,7 +150,6 @@ except:
 
 for iter in range(numIter):
   contPos = 1
-  print("Iteración: ", iter+1)
   tablaGenotiposTemporal = {}
   for i in range(len(TablaGenes)//2):
   # Seleccionar los mejores 2
@@ -169,13 +176,11 @@ for iter in range(numIter):
   # # Calculo de los promedios
   fitnessTotalTemporal = calculoFitnessTotalTemporal(tablaGenotiposTemporal)
   tablaGenotiposTemporal = calculoPromedios(tablaGenotiposTemporal, fitnessTotalTemporal)
-  # # Mostramos Primera Tabla
-  print("Tabla de genotipos: ")
-  mostrarTabla(TablaGenes)
+  TablaGenes = tablaGenotiposTemporal
+  fitnessTotal = fitnessTotalTemporal
+  print("Iteración: ", iter+1)
+  print("Tabla de genotipos iteracion ",iter+1)
   print("Fitness Total: ", fitnessTotal)
-  # # Mostramos Segunda Tabla
-  print("Tabla de genotipos Temporal: ")
-  mostrarTabla(tablaGenotiposTemporal)
-  print("Fitness Total Temporal: ", fitnessTotalTemporal)
+  mostrarTablaGenotipos(TablaGenes)
   
 
