@@ -2,6 +2,8 @@
 import numpy as np
 import random
 from prettytable import PrettyTable
+import matplotlib.pyplot as plt
+
 
 pesos = [7, 6, 8, 2] #pesos de los elementos
 utilidad = [4, 5, 6, 3] #utilidad de los elementos
@@ -169,6 +171,18 @@ def verificacionConvergencia(tablaGenotipos):
       return False
   return True
 
+def graficar(datosIteracion):
+  x = []
+  y = []
+  for i in range(len(datosIteracion)):
+    x.append(datosIteracion[i][0])
+    y.append(datosIteracion[i][1])
+  plt.plot(x, y)
+  plt.title('Mejor Fitness por iteración')
+  plt.xlabel('Iteración')
+  plt.ylabel('Fitness')
+  plt.show()
+
 TablaGenes, fitnessTotal = llenadoTablaCompletaGenotipos(cantIndividuos)
 print("Tabla de genotipos: ")
 mostrarTablaGenotipos(TablaGenes)
@@ -219,10 +233,13 @@ for iter in range(numIter):
   dato.append(fitnessTotal)
   datosIteracion.append(dato)
   # Si se desea evitar que el programa se detenga al encontrar convergencia comentar el bloque del if -> linea 222 hasta la linea 225
-  if verificacionConvergencia(TablaGenes):
-    print("--------------- CONVERGENCIA ---------------")
-    print("Se ha alcanzado la convergencia en la iteración: ", iter+1)
-    break
+  # if verificacionConvergencia(TablaGenes):
+  #   print("--------------- CONVERGENCIA ---------------")
+  #   print("Se ha alcanzado la convergencia en la iteración: ", iter+1)
+  #   break
 print("Resumen de iteraciones: ")
 mostrarResumenIteraciones(datosIteracion)
+print("Grafica: ")
+graficar(datosIteracion)
+
 
