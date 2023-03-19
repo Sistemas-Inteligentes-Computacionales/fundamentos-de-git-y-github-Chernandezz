@@ -1,3 +1,7 @@
+# Algoritmo Realizado Por: Cristian Felipe Hernandez Zuluaga - chernandezz@unal.edu.co
+# Universidad Nacional de Colombia
+# Facultad de Administracion
+# Programa de Administracion de sistemas informaticos
 
 import numpy as np
 import random
@@ -9,7 +13,7 @@ pesos = [7, 6, 8, 2] #pesos de los elementos
 utilidad = [4, 5, 6, 3] #utilidad de los elementos
 
 Pcruce=0.98  #Probabilidad de Cruce
-Pmuta=0.1   #Probabilidad de Mutación
+Pmuta=0   #Probabilidad de Mutación
 pesoMax = 50 # peso maximo que puede cargar la mochila
 
 # Restricciones
@@ -93,6 +97,8 @@ def creacionEstructuraGentipo(datosBinarios):
   genotipo["peso"] = calculoPesos(genotipo)
   genotipo["datosDecimales"] = llenadoGenotipoDecimales(genotipo)
   genotipo["fitness"] = calculoFitness(genotipo)
+  if genotipo["peso"] > pesoMax:
+    genotipo["fitness"] = 0
   return genotipo
 
 def mostrarDatosGen(tablaGenotipos):
@@ -193,8 +199,14 @@ try:
   numIter = int(input('ingrese el número de iteraciones que desea: '))
 except:
   print('por favor ingrese un valor entero ejm 2 , 10')
-
 datosIteracion = []
+dato = []
+dato.append(1)
+dato.append(mejorIndividuo(TablaGenes))
+dato.append(promedioFitness(TablaGenes))
+dato.append(fitnessTotal)
+datosIteracion.append(dato)
+
 for iter in range(numIter):
   
   contPos = 1
@@ -227,16 +239,19 @@ for iter in range(numIter):
   tablaGenotiposTemporal = calculoPromedios(tablaGenotiposTemporal, fitnessTotalTemporal)
   TablaGenes = tablaGenotiposTemporal
   fitnessTotal = fitnessTotalTemporal
-  dato.append(iter+1)
+  dato.append(iter+2)
   dato.append(mejorIndividuo(TablaGenes))
   dato.append(promedioFitness(TablaGenes))
   dato.append(fitnessTotal)
   datosIteracion.append(dato)
   # Si se desea evitar que el programa se detenga al encontrar convergencia comentar el bloque del if -> linea 222 hasta la linea 225
-  # if verificacionConvergencia(TablaGenes):
-  #   print("--------------- CONVERGENCIA ---------------")
-  #   print("Se ha alcanzado la convergencia en la iteración: ", iter+1)
-  #   break
+  if verificacionConvergencia(TablaGenes):
+    print("--------------- CONVERGENCIA ---------------")
+    print("Se ha alcanzado la convergencia en la iteración: ", iter+1)
+    print("SOLUCIÓN: ")
+    mostrarTablaGenotipos(TablaGenes)
+    print("Fitness Total: ", fitnessTotal)
+    break
 print("Resumen de iteraciones: ")
 mostrarResumenIteraciones(datosIteracion)
 print("Grafica: ")
